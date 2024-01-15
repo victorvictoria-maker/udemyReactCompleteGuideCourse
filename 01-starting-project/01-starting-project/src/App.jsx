@@ -6,7 +6,7 @@ import CoreConcepts from "./components/CoreConcepts.jsx";
 import TabButton from "./components/TabButton.jsx";
 
 function App() {
-  const [tabContent, setTabContent] = useState("components");
+  const [tabContent, setTabContent] = useState();
 
   const onClickTab = (conceptSelected) => {
     setTabContent(conceptSelected);
@@ -19,27 +19,54 @@ function App() {
         <section id='core-concepts'>
           <h2>Core Concepts</h2>
           <ul>
-            {CORE_CONCEPTS.map((concept, key) => {
-              return <CoreConcepts key={key} {...concept} />;
-            })}
+            {CORE_CONCEPTS.map((concept, key) => (
+              <CoreConcepts key={key} {...concept} />
+            ))}
           </ul>
         </section>
         <section id='examples'>
           <h2>Examples</h2>
           <menu>
-            <TabButton onClickTab={() => onClickTab("components")}>
+            <TabButton
+              isSelected={tabContent === "components"}
+              onClickTab={() => onClickTab("components")}
+            >
               Components
             </TabButton>
-            <TabButton onClickTab={() => onClickTab("jsx")}>JSX</TabButton>
-            <TabButton onClickTab={() => onClickTab("props")}>Props</TabButton>
-            <TabButton onClickTab={() => onClickTab("state")}>State</TabButton>
+            <TabButton
+              isSelected={tabContent === "jsx"}
+              onClickTab={() => onClickTab("jsx")}
+            >
+              JSX
+            </TabButton>
+            <TabButton
+              isSelected={tabContent === "props"}
+              onClickTab={() => onClickTab("props")}
+            >
+              Props
+            </TabButton>
+            <TabButton
+              isSelected={tabContent === "state"}
+              onClickTab={() => onClickTab("state")}
+            >
+              State
+            </TabButton>
           </menu>
-          <div className='tab-content'>
-            <h3>{EXAMPLES[tabContent].title}</h3>
-            <p>{EXAMPLES[tabContent].description}</p>
-            <pre>
-              <code>{EXAMPLES[tabContent].code}</code>
-            </pre>
+          <div id='tab-content'>
+            {!tabContent ? (
+              <p>
+                Please, select the content you want to learn about from the
+                examples above.
+              </p>
+            ) : (
+              <>
+                <h3>{EXAMPLES[tabContent].title}</h3>
+                <p>{EXAMPLES[tabContent].description}</p>
+                <pre>
+                  <code>{EXAMPLES[tabContent].code}</code>
+                </pre>
+              </>
+            )}
           </div>
         </section>
       </main>
