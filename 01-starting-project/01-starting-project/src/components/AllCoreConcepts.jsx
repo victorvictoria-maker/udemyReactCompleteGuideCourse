@@ -1,16 +1,16 @@
 import { CORE_CONCEPTS } from "../data.js";
 
 import CoreConcept from "./CoreConcept.jsx";
+import Section from "./Section.jsx";
 
 export default function AllCoreConcepts() {
   return (
-    <section id='core-concepts'>
-      <h2>Core Concepts</h2>
+    <Section sectionTitle='Core Concepts' id='core-concepts'>
       <ul>
         {CORE_CONCEPTS.map((concept, key) => (
           <CoreConcept key={key} {...concept} />
         ))}
       </ul>
-    </section>
+    </Section>
   );
 }
