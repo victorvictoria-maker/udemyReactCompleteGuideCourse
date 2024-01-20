@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function GameBoard() {
+export default function GameBoard({ switchPlayer, currentPlayer }) {
   const initialBoard = [
     [null, null, null],
     [null, null, null],
@@ -14,9 +14,11 @@ export default function GameBoard() {
       const updatedBoard = [
         ...initialBoardGame.map((eachBoardRow) => [...eachBoardRow]),
       ];
-      updatedBoard[rowIndex][buttonIndex] = "X";
+      updatedBoard[rowIndex][buttonIndex] = currentPlayer;
       return updatedBoard;
     });
+
+    switchPlayer();
   };
 
   return (
