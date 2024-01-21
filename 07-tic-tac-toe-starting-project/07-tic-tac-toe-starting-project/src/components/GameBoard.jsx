@@ -1,25 +1,33 @@
 import { useState } from "react";
 
-export default function GameBoard({ switchPlayer, currentPlayer }) {
+export default function GameBoard({ switchPlayer, gameTurns }) {
   const initialBoard = [
     [null, null, null],
     [null, null, null],
     [null, null, null],
   ];
 
-  const [gameBoard, setGameBoard] = useState(initialBoard);
+  let gameBoard = initialBoard;
 
-  let updateBoard = (rowIndex, buttonIndex) => {
-    setGameBoard((initialBoardGame) => {
-      const updatedBoard = [
-        ...initialBoardGame.map((eachBoardRow) => [...eachBoardRow]),
-      ];
-      updatedBoard[rowIndex][buttonIndex] = currentPlayer;
-      return updatedBoard;
-    });
+  for (const eachTurn of gameTurns) {
+    const { chosenBox, player: activePlayer } = eachTurn;
+    const { row, column } = chosenBox;
+    gameBoard[row][column] = activePlayer;
+  }
 
-    switchPlayer();
-  };
+  // const [gameBoard, setGameBoard] = useState(initialBoard);
+
+  // let updateBoard = (rowIndex, buttonIndex) => {
+  //   setGameBoard((initialBoardGame) => {
+  //     const updatedBoard = [
+  //       ...initialBoardGame.map((eachBoardRow) => [...eachBoardRow]),
+  //     ];
+  //     updatedBoard[rowIndex][buttonIndex] = currentPlayer;
+  //     return updatedBoard;
+  //   });
+
+  //   switchPlayer();
+  // };
 
   return (
     <ol id='game-board'>
@@ -30,7 +38,10 @@ export default function GameBoard({ switchPlayer, currentPlayer }) {
               {eachRow.map((playerSymbol, buttonIndex) => {
                 return (
                   <li key={buttonIndex}>
-                    <button onClick={() => updateBoard(rowIndex, buttonIndex)}>
+                    {/* <button onClick={() => updateBoard(rowIndex, buttonIndex)}>
+                      {playerSymbol}
+                    </button> */}
+                    <button onClick={() => switchPlayer(rowIndex, buttonIndex)}>
                       {playerSymbol}
                     </button>
                   </li>

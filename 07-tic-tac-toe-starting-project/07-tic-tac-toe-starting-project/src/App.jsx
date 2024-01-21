@@ -5,9 +5,29 @@ import PlayerInfo from "./components/PlayerInfo";
 
 function App() {
   const [currentPlayer, setCurrentPlayer] = useState("X");
+  const [gameTurns, setGameTurns] = useState([]);
 
-  let switchPlayer = () => {
+  let switchPlayer = (row, column) => {
     setCurrentPlayer((curPlayer) => (curPlayer === "X" ? "O" : "X"));
+
+    setGameTurns((prevTurns) => {
+      let activePlayer = "X";
+
+      if (gameTurns.length > 0 && prevTurns[0].player === "X") {
+        activePlayer = "O";
+      }
+
+      const updatedTurns = [
+        {
+          chosenBox: { row, column },
+          player: activePlayer,
+        },
+        ...prevTurns,
+      ];
+
+      return updatedTurns;
+    });
+    // console.log(row, column);
   };
 
   return (
@@ -25,7 +45,7 @@ function App() {
             isActive={currentPlayer === "O"}
           />
         </ol>
-        <GameBoard switchPlayer={switchPlayer} currentPlayer={currentPlayer} />
+        <GameBoard switchPlayer={switchPlayer} gameTurns={gameTurns} />
       </div>
       LOG
     </main>
