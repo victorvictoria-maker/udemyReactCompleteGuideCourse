@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import GameBoard from "./components/GameBoard";
 import PlayerInfo from "./components/PlayerInfo";
+import Log from "./components/Log";
 
 function App() {
   const [currentPlayer, setCurrentPlayer] = useState("X");
@@ -47,7 +48,7 @@ function App() {
         </ol>
         <GameBoard switchPlayer={switchPlayer} gameTurns={gameTurns} />
       </div>
-      LOG
+      <Log gameTurns={gameTurns} />
     </main>
   );
 }
