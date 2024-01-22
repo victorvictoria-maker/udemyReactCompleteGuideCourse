@@ -1,20 +1,6 @@
 import { useState } from "react";
 
-export default function GameBoard({ switchPlayer, gameTurns }) {
-  const initialBoard = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
-  ];
-
-  let gameBoard = initialBoard;
-
-  for (const eachTurn of gameTurns) {
-    const { chosenBox, player: activePlayer } = eachTurn;
-    const { row, column } = chosenBox;
-    gameBoard[row][column] = activePlayer;
-  }
-
+export default function GameBoard({ switchPlayer, gameBoard }) {
   // const [gameBoard, setGameBoard] = useState(initialBoard);
 
   // let updateBoard = (rowIndex, buttonIndex) => {
@@ -41,7 +27,10 @@ export default function GameBoard({ switchPlayer, gameTurns }) {
                     {/* <button onClick={() => updateBoard(rowIndex, buttonIndex)}>
                       {playerSymbol}
                     </button> */}
-                    <button onClick={() => switchPlayer(rowIndex, buttonIndex)}>
+                    <button
+                      onClick={() => switchPlayer(rowIndex, buttonIndex)}
+                      disabled={playerSymbol !== null}
+                    >
                       {playerSymbol}
                     </button>
                   </li>
