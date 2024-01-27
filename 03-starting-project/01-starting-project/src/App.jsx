@@ -12,11 +12,13 @@ function App() {
     duration: 10,
   });
 
+  const validUserInput = userInputValue.duration > 0;
+
   let getUserInput = (valueTag, inputValue) => {
     setUserInputValue((prevValue) => {
       return {
         ...prevValue,
-        [valueTag]: inputValue,
+        [valueTag]: +inputValue,
       };
     });
   };
@@ -25,7 +27,13 @@ function App() {
     <>
       <HeaderComponent />
       <UserInput userInputValue={userInputValue} getUserInput={getUserInput} />
-      <Results userInputValue={userInputValue} />
+      {validUserInput ? (
+        <Results userInputValue={userInputValue} />
+      ) : (
+        <p className='center'>
+          Please, you can not invest less than a year so enter a valid duration.
+        </p>
+      )}
     </>
   );
 }
