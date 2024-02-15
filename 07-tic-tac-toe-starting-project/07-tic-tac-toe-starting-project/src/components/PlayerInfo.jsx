@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-export default function PlayerInfo({ initialName, symbol, isActive }) {
+export default function PlayerInfo({
+  initialName,
+  symbol,
+  isActive,
+  handlePlayerNameChange,
+}) {
   useState();
 
   const [playerName, setPlayerName] = useState(initialName);
@@ -8,14 +13,15 @@ export default function PlayerInfo({ initialName, symbol, isActive }) {
 
   let handlePlayerName = () => {
     setIsEditing((editing) => !editing);
-
-    if (!isEditing) {
-      changePlayerName();
-    }
   };
 
   let changePlayerName = (e) => {
     setPlayerName(e.target.value);
+  };
+
+  const savePlayerName = () => {
+    handlePlayerNameChange(symbol, playerName);
+    handlePlayerName();
   };
 
   return (
@@ -35,7 +41,9 @@ export default function PlayerInfo({ initialName, symbol, isActive }) {
 
         <span className='player-symbol'>{symbol}</span>
       </span>
-      <button onClick={handlePlayerName}>{isEditing ? "Save" : "Edit"}</button>
+      <button onClick={isEditing ? savePlayerName : handlePlayerName}>
+        {isEditing ? "Save" : "Edit"}
+      </button>
     </li>
   );
 }

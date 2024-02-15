@@ -18,20 +18,22 @@ const getCurrentPlayer = (gameTurns) => {
   return currentPlayer;
 };
 
-// COMPONENT FUNCTION
-function App() {
-  const [gameTurns, setGameTurns] = useState([]);
+const INITIAL_PLAYERS_NAME = {
+  X: "Player 1",
+  O: "Player 2",
+};
 
-  const currentPlayer = getCurrentPlayer(gameTurns);
+// HANDLES EACH BOX IN THE GAME BOARD
+const INITIAL_BOARD = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
 
-  // HANDLES EACH BOX IN THE GAME BOARD
-  const initialBoard = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
-  ];
-
-  let gameBoard = initialBoard;
+// DERIVE GAME BOARD
+const deriveGameBoard = (gameTurns) => {
+  // IMMUTABILITY MATTERS
+  let gameBoard = [...INITIAL_BOARD.map((eachRow) => [...eachRow])];
 
   for (const eachTurn of gameTurns) {
     const { chosenBox, player: activePlayer } = eachTurn;
@@ -39,11 +41,14 @@ function App() {
     gameBoard[row][column] = activePlayer;
   }
 
-  // HANDLES WINNING IN THE GAME
+  return gameBoard;
+};
+
+// HANDLES WINNING IN THE GAME
+const getWinner = (gameBoard, eachPlayerName) => {
   let winner = null;
 
   for (const eachCombination of WINNING_COMBINATIONS) {
-    // console.log(eachCombination);
     const playerInFirstBoxCombination =
       gameBoard[eachCombination[0].row][eachCombination[0].column];
     const playerInSecondBoxCombination =
@@ -56,11 +61,45 @@ function App() {
       playerInFirstBoxCombination === playerInSecondBoxCombination &&
       playerInFirstBoxCombination === playerInThirdBoxCombination
     ) {
-      winner = playerInFirstBoxCombination;
+      winner = eachPlayerName[playerInFirstBoxCombination];
     }
   }
 
+  return winner;
+};
+
+// COMPONENT FUNCTION
+function App() {
+  const [gameTurns, setGameTurns] = useState([]);
+  const [eachPlayerName, setEachPlayerName] = useState(INITIAL_PLAYERS_NAME);
+
+  // HANDLES EACH PLAYER'S NAME
+  const handlePlayerNameChange = (symbol, playerName) => {
+    setEachPlayerName((prevPlayerNames) => {
+      return {
+        ...prevPlayerNames,
+        [symbol]: playerName,
+      };
+    });
+  };
+
+  const currentPlayer = getCurrentPlayer(gameTurns);
+  const gameBoard = deriveGameBoard(gameTurns);
+
+  // HANDLES WINNINGS AND DRAWS
+  const winner = getWinner(gameBoard, eachPlayerName);
   const gameDraw = gameTurns.length === 9 && !winner;
+
+  // HANDLES GAME RESTART
+  const restartGame = () => {
+    setGameTurns([]);
+
+    // ATTENTIPON!!!!
+    // RESET THE PLAYER NAMES TO THE DEFAULT NAME
+    // setEachPlayerName(INITIAL_PLAYERS_NAME);
+    // console.log(INITIAL_PLAYERS_NAME, eachPlayerName);
+    // setEachPlayerName(INITIAL_PLAYERS_NAME);
+  };
 
   // THIS FUNCTION RUNS ON CLICK OF EVERY BUTTON IN THE GAME BOARD
   let switchPlayer = (row, column) => {
@@ -85,17 +124,21 @@ function App() {
       <div id='game-container'>
         <ol id='players' className='highlight-player'>
           <PlayerInfo
-            initialName='Player 1'
+            initialName={INITIAL_PLAYERS_NAME.X}
             symbol='X'
             isActive={currentPlayer === "X"}
+            handlePlayerNameChange={handlePlayerNameChange}
           />
           <PlayerInfo
-            initialName='Player 2'
+            initialName={INITIAL_PLAYERS_NAME.O}
             symbol='O'
             isActive={currentPlayer === "O"}
+            handlePlayerNameChange={handlePlayerNameChange}
           />
         </ol>
-        {(winner || gameDraw) && <GameOver winner={winner} />}
+        {(winner || gameDraw) && (
+          <GameOver winner={winner} restartGame={restartGame} />
+        )}
         <GameBoard switchPlayer={switchPlayer} gameBoard={gameBoard} />
       </div>
       <Log gameTurns={gameTurns} />
